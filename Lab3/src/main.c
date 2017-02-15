@@ -10,6 +10,7 @@
 #include "arm.h"
 #include "sensors.h"
 
+
 volatile unsigned short timer0count = 0;
 int potCounts;
 int potDegs;
@@ -24,7 +25,7 @@ signed int thisCurrent;
 char isSettled = 0;
 signed int testVal;
 int counts = 0;
-long total = 0;
+extern long total = 0;
 int potL1 = 0;
 signed int Ax = 0;
 signed int Ay = 0;
@@ -65,6 +66,8 @@ int main() {
 	initSPI();
 	encInit(0);
 	resetEncCount(0);
+	encInit(0);
+	resetEncCount(1);
 	initButtons();
 	setConst('L', 67.0, 4.0, 1.75);
 	setConst('H', 67.0, 4.0, 1.75);
@@ -74,6 +77,7 @@ int main() {
 	//DDRAbits._P2 = OUTPUT;
 	//DDRAbits._P3 = OUTPUT;
 	startTimer0();
+	stopMotors();
 	while(1) {
 
 	}
@@ -88,7 +92,7 @@ ISR(TIMER0_COMPA_vect){
 	potL1 = getADC(2);
 	encInit(0);
 	counts = encCount(0);
-	total += counts;
+	total = counts;
 	printf("%ld,\t%d,\t%d,\t%d,\t%d\r\n", total, potL1, Ax, Ay, Az);
 	readButtons();
 	PORTCbits._P0 = OFF;

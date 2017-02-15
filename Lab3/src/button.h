@@ -8,8 +8,6 @@
 #ifndef BUTTON_H_
 #define BUTTON_H_
 
-
-
 extern int buttonState;
 extern int prevButton;
 extern signed int angle;

@@ -23,7 +23,7 @@ void initSPI() {
 	/* Set MOSI and SCK output, all others input */
 	DDRB = (1<<DDB5)|(1<<DDB7)|(1<<DDB4);
 	/* Enable SPI, Master, set clock rate fck/16 */
-	SPCR = (1<<SPE)|(1<<MSTR);//|(1<<SPR0);
+	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
 
 	DDRC |= ((1<<DDC0) |// Deasserts spare SS
 			(1<<DDC1) | // Deasserts CoProcessor SS

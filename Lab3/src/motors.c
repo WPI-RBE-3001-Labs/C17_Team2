@@ -5,6 +5,7 @@
  *      Author: bdknox
  */
 
+#include "RBELib/RBELib.h"
 #include "Math.h"
 #include "button.h"
 
@@ -185,7 +186,7 @@ void gotoXY(int x, int y) {
 		if(settled(thetaL,curLAngle) && settled(thetaH,curHAngle)){
 			break;
 		}
-		printf("%d,\t%d\r\n", curLAngle, curHAngle);
+		//printf("%d,\t%d\r\n", curLAngle, curHAngle);
 //		printf("%f\t%d\t%f\t%d\r\n", thetaL, curLAngle, thetaH, curHAngle);
 		//	printf("%d\t%d\r\n", curLAngle, curHAngle);
 		//	printf("%f\r\n", thetaL);
@@ -238,6 +239,10 @@ void driveLink(int link, int dir) {
  */
 void homePos() {
 	gotoAngles(0, 0);
+	encInit(0);
+	resetEncCount(0);
+	encInit(1);
+	resetEncCount(1);
 }
 
 

@@ -32,23 +32,29 @@ int rvCount = 2047;
 signed int getAccel(int axis) {
 	DDRDbits._P7 = OUTPUT;
 	PORTDbits._P7 = 1;
+	SPCR |= (1<<SPR1) + (1<<SPR0);
+
 	signed int accelVal = 0x0000;
 	signed int gVal = 0x0000;
+	char temp0 = 0x00;
 	int temp1 = 0x0000;
 	int temp2 = 0x0000;
+
 	PORTDbits._P7 = 0;
-	spiTransceive(0x06);
-	temp1 = spiTransceive(axis);
+	temp0 = spiTransceive(0x06);
+	temp1 = spiTransceive((axis<<6));
 	temp2 = spiTransceive(0x00);
 	PORTDbits._P7 = 1;
 	temp1 &= (0x0F);
-	accelVal |= ((temp1<<8)|temp2);
+	accelVal |= ((temp1<<8) + temp2);
+	//printf("%d\t%d\t\r\n", temp1, temp2);
 	if (accelVal >= rvCount) {
 		gVal = ((accelVal - rvCount)*.22);
 	}
 	else {
 		gVal = -((rvCount - accelVal)*.22);
 	}
+	SPCR &= 0xFD;
 	return gVal;
 }
 
@@ -63,12 +69,7 @@ int IRDist(int chan) {
 	return 0;
 }
 
-/**
- * @brief Initialize the encoders with the desired settings.
- * @param chan Channel to initialize.
- *
- * @todo Make a function that can setup both encoder chips on the board.
- */
+
 void encInit(int chan) {
 	DDRCbits._P5 = OUTPUT;
 	DDRCbits._P4 = OUTPUT;
@@ -97,12 +98,6 @@ void encInit(int chan) {
 
 }
 
-/**
- * @brief Reset the current count of the encoder ticks.
- * @param chan The channel to clear.
- *
- * @todo Clear the encoder count (set to 0).
- */
 void resetEncCount(int chan) {
 	if (chan == 0) {
 		ENCODER_SS_0 = 0;
@@ -116,13 +111,6 @@ void resetEncCount(int chan) {
 	}
 }
 
-/**
- * @brief Finds the current count of one of the encoders.
- * @param  chan Channel that the encoder is on that you would like to read.
- * @return count The current count of the encoder.
- *
- * @todo Find the current encoder ticks on a given channel.
- */
 signed long encCount(int chan) {
 	signed long value = 0x00000000;
 	int data1 = 0;
@@ -144,7 +132,7 @@ signed long encCount(int chan) {
 	value |= (data1<<8);
 	value |= data2;
 	//printf("%d\t%d\t\r\n", data1, data2);
-	resetEncCount(chan);
+	//resetEncCount(chan);
 	return value;
 
 }

@@ -30,44 +30,43 @@ void initButtons(){
 // buttonState doesn't hold when no buttons are pressed like it should
 void readButtons(){
 
-		// Voltage 0
-		if (PINC == 46) {
-			setDAC(0, 0);
-			setDAC(1, 0);
-		}
-		// Voltage -3
-		else if (PINC == 166) {
-			setDAC(0, 0);
-			setDAC(1, 963);
-		}
-		// Voltage +3
-		else if (PINC == 170) {
-			setDAC(0, 963);
-			setDAC(1, 0);
-		}
-		// Voltage +6
-		else if (PINC == 172) {
-			setDAC(0, 1933);
-			setDAC(1, 0);
-		}
-// Code for four arm positions
-//	if (PINC == 42) {
-//			pawsX = 50;
-//			pawsY = 370;
-//		}
-//		else if (PINC == 138) {
-//			pawsX = 120;
-//			pawsY = 400;
-//		}
-//		else if (PINC == 162) {
-//			pawsX = 110;
-//			pawsY = 330;
-//		}
-//		else if (PINC == 168) {
-//			pawsX = 250;
-//			pawsY = 150;
-//		}
-//		else{
-//			gotoXY(pawsX,pawsY);
-//		}
+	//		// Voltage 0
+	//		if (PINC == 46) {
+	//			setDAC(0, 0);
+	//			setDAC(1, 0);
+	//		}
+	//		// Voltage -3
+	//		else if (PINC == 166) {
+	//			setDAC(0, 0);
+	//			setDAC(1, 963);
+	//		}
+	//		// Voltage +3
+	//		else if (PINC == 170) {
+	//			setDAC(0, 963);
+	//			setDAC(1, 0);
+	//		}
+	//		// Voltage +6
+	//		else if (PINC == 172) {
+	//			setDAC(0, 1933);
+	//			setDAC(1, 0);
+	//		}
+	// Code for four arm positions
+	if (PINC == 46) {
+		setDAC(0, 0);
+		setDAC(1, 0);
+	}
+	else if (PINC == 166) {
+		gotoXY(0,0);
+	}
+	//		else if (PINC == 162) {
+	//			pawsX = 110;
+	//			pawsY = 330;
+	//		}
+	//		else if (PINC == 168) {
+	//			pawsX = 250;
+	//			pawsY = 150;
+	//		}
+	//		else{
+	//			gotoXY(pawsX,pawsY);
+	//		}
 }
