@@ -27,6 +27,7 @@ signed int testVal;
 int counts = 0;
 extern long total = 0;
 int potL1 = 0;
+int potL2 = 0;
 signed int Ax = 0;
 signed int Ay = 0;
 signed int Az = 0;
@@ -46,10 +47,14 @@ void startTimer0(){
 
 	//set I/O pin to digital I/O
 	PORTCbits._P0 = 0;
+
 	//set direction as output
 	DDRCbits._P0 = OUTPUT;
+//	DDRCbits._P3 = INPUT;
+//	DDRCbits._P7 = INPUT;
 	//set output off
 	PINCbits._P0 = OFF;
+
 
 	//Global Interrupt Enable
 	sei();
@@ -67,7 +72,9 @@ int main() {
 	encInit(0);
 	resetEncCount(0);
 	encInit(0);
+	encInit(1);
 	resetEncCount(1);
+	encInit(1);
 	initButtons();
 	setConst('L', 67.0, 4.0, 1.75);
 	setConst('H', 67.0, 4.0, 1.75);
@@ -76,12 +83,10 @@ int main() {
 	//PORTAbits._P3 = 0;
 	//DDRAbits._P2 = OUTPUT;
 	//DDRAbits._P3 = OUTPUT;
-	startTimer0();
-	stopMotors();
-	while(1) {
-
+	while (1 == 1) {
+		startTimer0();
 	}
-
+	//	stopMotors();
 }
 
 ISR(TIMER0_COMPA_vect){
@@ -90,10 +95,13 @@ ISR(TIMER0_COMPA_vect){
 	Ay = getAccel(1);
 	Az = getAccel(2);
 	potL1 = getADC(2);
+	potL2 = getADC(3);
 	encInit(0);
+	encInit(1);
 	counts = encCount(0);
 	total = counts;
-	printf("%ld,\t%d,\t%d,\t%d,\t%d\r\n", total, potL1, Ax, Ay, Az);
+	printf("%d,\%ld,\%d,\%d,\%d,\%d,\%d,\%d\r\n", EncoderCounts(0), encCount(1), EncoderCounts(1), Ax, Ay, Az, armLAngle(getADC(2)), armUAngle(getADC(3)));
+	//printf("%d,\t%d,\t%d,\t%d\r\n", potL1, armLAngle(potL1), potL2, armUAngle(potL2));
 	readButtons();
 	PORTCbits._P0 = OFF;
 	timer0count++; // increment counter

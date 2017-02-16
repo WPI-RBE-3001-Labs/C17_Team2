@@ -25,7 +25,7 @@ float map(float x, float in_min, float in_max, float out_min, float out_max) {
 }
 
 int armLAngle(int counts) {
-	return map(counts, 270.0, 698.0, 0.0, 90.0);
+	return map(counts, 264.0, 669.0, 0.0, 90.0);
 }
 int armUAngle(int counts) {
 	return map(counts, 270.0, 633.0, -90.0, 0.0);
@@ -51,34 +51,35 @@ void stopMotors() {
  * @todo Make a way to drive the links to a desired angle.
  */
 void gotoAngles(int lowerTheta, int upperTheta) {
-	changeADC(2);
-	int curLAngle = armLAngle(getADC(2));
-	changeADC(3);
-	int curHAngle = armUAngle(getADC(3));
-	signed int lowVal = calcPID('L', lowerTheta, curLAngle);
-	signed int upVal = calcPID('H', upperTheta, curHAngle);
-	if (lowVal >= 0) {
-		//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
-		setDAC(0, lowVal);
-		setDAC(1, 0);
-	}
-	else if (lowVal < 0) {
-		//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
-		setDAC(1, -lowVal);
-		setDAC(0, 0);
-	}
-	if (upVal >= 0) {
-		//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
-		setDAC(3, upVal);
-		setDAC(2, 0);
+	//while(1){
+		changeADC(2);
+		int curLAngle = armLAngle(getADC(2));
+		changeADC(3);
+		int curHAngle = armUAngle(getADC(3));
+		signed int lowVal = calcPID('L', lowerTheta, curLAngle);
+		signed int upVal = calcPID('H', upperTheta, curHAngle);
+		if (lowVal >= 0) {
+			//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
+			setDAC(0, lowVal);
+			setDAC(1, 0);
+		}
+		else if (lowVal < 0) {
+			//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
+			setDAC(1, -lowVal);
+			setDAC(0, 0);
+		}
+		if (upVal >= 0) {
+			//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
+			setDAC(3, upVal);
+			setDAC(2, 0);
 
-	}
-	else if (upVal < 0) {
-		//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
-		setDAC(2, upVal);
-		setDAC(3, 0);
-
-	}
+		}
+		else if (upVal < 0) {
+			//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
+			setDAC(2, upVal);
+			setDAC(3, 0);
+		}
+	//}
 }
 
 
@@ -187,7 +188,7 @@ void gotoXY(int x, int y) {
 			break;
 		}
 		//printf("%d,\t%d\r\n", curLAngle, curHAngle);
-//		printf("%f\t%d\t%f\t%d\r\n", thetaL, curLAngle, thetaH, curHAngle);
+		//		printf("%f\t%d\t%f\t%d\r\n", thetaL, curLAngle, thetaH, curHAngle);
 		//	printf("%d\t%d\r\n", curLAngle, curHAngle);
 		//	printf("%f\r\n", thetaL);
 	}
