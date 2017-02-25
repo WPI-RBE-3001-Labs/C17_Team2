@@ -50,7 +50,7 @@ all: Lab4.elf secondary-outputs
 Lab4.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,Lab4.map -Wl,-u,vfprintf -lprintf_flt -lm -L"R:\RBE3001\workspace1\RBELib\Release" -mmcu=atmega644p -o "Lab4.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,Lab4.map -Wl,-u,vfprintf -lprintf_flt -lm -L"R:\RBE3001\GitHub\C17_Team2\RBELib\Release" -mmcu=atmega644p -o "Lab4.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -10,7 +10,6 @@
 #include "arm.h"
 #include "sensors.h"
 
-
 volatile unsigned short timer0count = 0;
 int potCounts;
 int potDegs;
@@ -135,8 +134,9 @@ ISR(TIMER0_COMPA_vect){
 
 	//	setServo(7,0);
 	//	setServo(6,060);
+	// This is where GitHub is supposed to work
 	IRDistPick = IRDist(6);
-	if (IRDistPick < 140 && blockCounter > 550) {
+	if (IRDistPick < 180 && blockCounter > 550) {
 		timeToPick = TRUE;
 	}
 	for(int i = 0; i < 5; i++) {
