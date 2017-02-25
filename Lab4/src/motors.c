@@ -190,7 +190,7 @@ void gotoXY(int x, int y) {
 		}
 	 */
 	//printf("%d,\t%d\r\n", curLAngle, curHAngle);
-	printf("%f\t%d\t%f\t%d\r\n", thetaL, curLAngle, thetaH, curHAngle);
+//	printf("%f\t%d\t%f\t%d\r\n", thetaL, curLAngle, thetaH, curHAngle);
 	//			printf("%d\t%d\r\n", curLAngle, curHAngle);
 	//	printf("%f\r\n", thetaL);
 	//	}
