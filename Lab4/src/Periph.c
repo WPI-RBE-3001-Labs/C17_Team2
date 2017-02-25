@@ -68,10 +68,12 @@ signed int getAccel(int axis) {
 int IRDist(int chan) {
 
 	changeADC(chan);
+//	float volts = (float)(getADC(chan))*0.0048828125;
+//	float distance = (float)(65)*pow(volts, -1.10);
+//	return (int)(2.8 * distance);
 	float volts = (float)(getADC(chan))*0.0048828125;
-	float distance = (float)(65)*pow(volts, -1.10);
-	//exponential scaling (1/x)
-	return (int)(2.8 * distance);
+	float distance = (float)((387.83339)*pow(volts, -1.224))-6.41684;
+	return (int)(distance);
 }
 
 

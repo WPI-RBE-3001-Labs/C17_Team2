@@ -113,5 +113,6 @@ signed int calcPID(char link, int setPoint, int actPos) {
 		);
 		break;
 	}
+	//printf("%d\t%d\r\n", setPoint, actPos);
 	return value;
 }
