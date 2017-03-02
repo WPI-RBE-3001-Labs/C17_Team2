@@ -10,13 +10,11 @@
 #include <RBELib/reg_structs.h>
 #include <avr/interrupt.h>
 
-/**
- * @brief Initializes the SPI bus for communication with all of your
- * SPI devices.
- *
- * @todo Create the function that will allow you to initialize the SPI
- * in a mode compatible with all devices.  Do not forget to deassert all
- * of your SS lines!
+/* Function: initSPI
+ * --------------------------------------
+ * void
+ * returns: nothing
+ * purpose: initializes SPI so that all the components are active
  */
 void initSPI() {
 
@@ -33,7 +31,7 @@ void initSPI() {
 			(1<<DDC5) | // Deasserts encoder 0 SS
 			(1<<DDC6)); // Deasserts spare SS
 
-	//initializing DAC SS
+	// initializing DAC SS
 	DAC_SS_ddr = OUTPUT;
 	DAC_SS = 0;
 	DAC_SS = 1;
@@ -41,7 +39,7 @@ void initSPI() {
 	DDRDbits._P7 = OUTPUT;
 	PORTDbits._P7= 0;
 	PORTDbits._P7= 1;
-	//Encoders SS lines = outputs
+	// Encoders SS lines = outputs
 	ENCODER_SS_0_ddr = OUTPUT;
 	ENCODER_SS_1_ddr = OUTPUT;
 
@@ -49,7 +47,12 @@ void initSPI() {
 	ENCODER_SS_1 = 1;
 }
 
-
+/* Function: spiTransceive
+ * --------------------------------------
+ * data: the data requested
+ * returns: nothing
+ * purpose: send and recieve to the SPI register
+ */
 unsigned char spiTransceive(BYTE data) {
 	/* Start transmission */
 	SPDR = data;

@@ -7,7 +7,7 @@
 
 #include "RBELib/RBELib.h"
 
-
+// variables
 int buttonState;
 int prevButton;
 signed int angle;
@@ -35,7 +35,13 @@ void initButtons(){
 	//printf("%d\r\n", PINBbits._P7);
 }
 
-// buttonState doesn't hold when no buttons are pressed like it should
+/* Function: readButtons
+ * --------------------------------------
+ * void
+ * returns: nothing
+ * purpose: checks for button press, if given a value then sets action
+ * values: 46, 166, 170, and 172
+ */
 void readButtons(){
 
 	//		// Voltage 0
@@ -75,15 +81,4 @@ void readButtons(){
 		break;
 	}
 
-	//		else if (PINC == 162) {
-	//			pawsX = 110;
-	//			pawsY = 330;
-	//		}
-	//		else if (PINC == 168) {
-	//			pawsX = 250;
-	//			pawsY = 150;
-	//		}
-	//		else{
-	//			gotoXY(pawsX,pawsY);
-	//		}
 }

@@ -6,11 +6,19 @@
  */
 #include "RBELib/RBELib.h"
 
+// variables
 long currentCount;
 long lastCount0 = 0;
 long lastCount1 = 0;
 long difference;
 
+/* Function: EncoderCounts
+ * --------------------------------------
+ * __chan: channel of the encoder
+ * returns: difference, between the values
+ * purpose: to track encoder counts and return how many have elapsed
+ * since last called
+ */
 int EncoderCounts(int __chan) {
 	if (__chan == 0){
 		currentCount = encCount(0);
@@ -28,6 +36,12 @@ int EncoderCounts(int __chan) {
 	return difference;
 }
 
+/* Function: GetAcceleration
+ * --------------------------------------
+ * __axis: determines which axis is in question
+ * returns: accelVal, the value of the acceleration
+ * purpose: to determine the acceleration of the accelerometer
+ */
 int GetAcceleration(int __axis) {
 	int accelVal = 0x0000;
 	int temp1 = 0x0000;

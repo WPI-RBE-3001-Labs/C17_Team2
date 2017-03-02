@@ -30,10 +30,12 @@ int armLAngle(int counts) {
 int armUAngle(int counts) {
 	return map(counts, 270.0, 633.0, -90.0, 0.0);
 }
-/**
- * @brief Helper function to stop the motors on the arm.
- *
- * @todo Create way to stop the motors using the DAC.
+
+/* Function: stopMotors
+ * --------------------------------------
+ * void
+ * returns: nothing
+ * purpose: sets all motors to stop
  */
 void stopMotors() {
 	setDAC(0, 0);
@@ -42,16 +44,14 @@ void stopMotors() {
 	setDAC(3, 0);
 }
 
-/**
- * @brief Drive the arm to a desired angle
- *
- * @param lowerTheta The desired angle for the lower link.
- * @param upperTheta The desired angle for the upper link.
- *
- * @todo Make a way to drive the links to a desired angle.
+/* Function: gotoAngles
+ * --------------------------------------
+ * lowerTheta: value for the lower link
+ * upperTheta: value for the upper link
+ * returns: nothing
+ * purpose: sets DAC until both of the theta values are met using if statements
  */
 void gotoAngles(int lowerTheta, int upperTheta) {
-	//while(1){
 	changeADC(2);
 	int curLAngle = armLAngle(getADC(2));
 	changeADC(3);
@@ -59,38 +59,45 @@ void gotoAngles(int lowerTheta, int upperTheta) {
 	signed int lowVal = calcPID('L', lowerTheta, curLAngle);
 	signed int upVal = calcPID('H', upperTheta, curHAngle);
 	if (lowVal >= 0) {
-		//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
 		setDAC(0, lowVal);
 		setDAC(1, 0);
 	}
 	else if (lowVal < 0) {
-		//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
 		setDAC(1, -lowVal);
 		setDAC(0, 0);
 	}
 	if (upVal >= 0) {
-		//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
 		setDAC(3, upVal);
 		setDAC(2, 0);
 
 	}
 	else if (upVal < 0) {
-		//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
 		setDAC(2, upVal);
 		setDAC(3, 0);
 	}
-	//}
 }
 
-
-//float square(float n) {
-//	return (float)n*n;
-//}
-
+/* Function: radToDegree
+ * --------------------------------------
+ * rad: takes in radians given
+ * returns: nothing
+ * purpose: converts radians to degrees
+ */
 int radToDegree(float rad) {
 	return (int)((rad/pi)*180.0);
 }
 
+/* Function: settled
+ * --------------------------------------
+ * setPoint: destination point
+ * actPos: current position
+ * returns: nothing
+ * purpose: determines if arm has settled through ifs
+ */
 char settled(int setPoint, int actPos) {
 	if (actPos - setPoint < 0) {
 		if (actPos - setPoint > -6) {
@@ -110,45 +117,22 @@ char settled(int setPoint, int actPos) {
 	}
 }
 
-/**
- * @brief Drive the end effector of the arm to a desired X and Y position in the workspace.
- *
- * @param x The desired x position for the end effector.
- * @param y The desired y position for the end effector.
- *
- * @todo Use kinematic equations to move the end effector to the desired position.
+/* Function: gotoXY
+ * --------------------------------------
+ * x: desired x value
+ * y: desired y value
+ * returns: nothing
+ * purpose: uses inverse kinematics to calculate the arm angles based on the 
+ * deisired input of the X and Y, sets DACs to move to those angles once calculated
  */
 void gotoXY(int x, int y) {
-	//	while (1 == 1) {
 	changeADC(2);
 	int curLAngle = armLAngle(getADC(2));
-	//clearADC(2);
+	// clearADC(2);
 
 	changeADC(3);
 	int curHAngle = armUAngle(getADC(3));
-	//clearADC(3);
-
-	//	numerator1 =   -square(l2) + square(l1) + sqrt((square((float)x) + square((float)(y - l0))));
-	//	denominator1 = 2.0*(l1*sqrt((square(x) + square((float)(y - l0)))));
-	//	float theta1 = - pi/2 + acos(numerator1/denominator1) + atan2(y - l0, x);
-	//
-	//	numerator2 =   -sqrt(square((float)x) + square((float) (y - l0))) + square(l1) + square(l2);
-	//	denominator2 = 2.0*l1*l2;
-	//	float theta2 = - acos(numerator2/denominator2);
-	//
-	//	signed int thetaL = radToDegree(theta1);
-	//	signed int thetaH = radToDegree(theta2);
-
-	//	numerator2 =   (square(x) + square(y) - square(l2) - square(l1));
-	//	denominator2 = 2.0*l1*l2;
-	//	float theta2 = atan2((sqrt(1-(numerator1/denominator1))),(numerator1/denominator1));
-	//
-	//	numerator1 =   -sqrt(square((float)x) + square((float) (y - l0))) + square(l1) + square(l2);
-	//	denominator1 = 2.0*l1*l2;
-	//	float theta1 = - acos(numerator2/denominator2);
-
-	//	signed int thetaL = radToDegree(theta1);
-	//	signed int thetaH = radToDegree(theta2);
+	// clearADC(3);
 
 	// Inverse Kinematics Angle Calculations
 	float xF = (float) x; // cast to float because integer math overflowed
@@ -163,48 +147,42 @@ void gotoXY(int x, int y) {
 	signed int upVal = calcPID('H', (int) thetaH, curHAngle);
 
 	if (lowVal >= 0) {
-		//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
 		setDAC(0, lowVal);
 		setDAC(1, 0);
 	}
 	else if (lowVal < 0) {
-		//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
 		setDAC(1, -lowVal);
 		setDAC(0, 0);
 	}
 	if (upVal >= 0) {
-		//write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_0 calcPID('L', 45, armAngle(getADC(2))
 		setDAC(3, upVal);
 		setDAC(2, 0);
 
 	}
 	else if (upVal < 0) {
-		//write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
+		// write to DAC_1 (-)calcPID('L', 45, armAngle(getADC(2))
 		setDAC(2, upVal);
 		setDAC(3, 0);
 
 	}
-	/*
-		if(settled(thetaL,curLAngle) && settled(thetaH,curHAngle)){
-			break;
-		}
-	 */
-	//printf("%d,\t%d\r\n", curLAngle, curHAngle);
-//	printf("%f\t%d\t%f\t%d\r\n", thetaL, curLAngle, thetaH, curHAngle);
-	//			printf("%d\t%d\r\n", curLAngle, curHAngle);
-	//	printf("%f\r\n", thetaL);
-	//	}
+
+	// print statements to show how we implemented 
+	// printf("%d,\t%d\r\n", curLAngle, curHAngle);
+	// printf("%f\t%d\t%f\t%d\r\n", thetaL, curLAngle, thetaH, curHAngle);
+	// printf("%d\t%d\r\n", curLAngle, curHAngle);
+	// printf("%f\r\n", thetaL);
 }
 
 
-
-/**
- * @brief Drive a link (upper or lower) in a desired direction.
- *
- * @param link Which link to control.
- * @param dir Which way to drive the link.
- *
- * @todo Create a way to drive either link in any direction.
+/* Function: driveLink
+ * --------------------------------------
+ * link: the link that is to be driven, either L or H
+ * dir: the direction it is driven
+ * returns: nothing
+ * purpose: sets DAC for both the lower and upper arms
  */
 void driveLink(int link, int dir) {
 	switch (link) {
@@ -233,12 +211,11 @@ void driveLink(int link, int dir) {
 	}
 }
 
-/**
- * @brief Drive the arm to a "home" position using the potentiometers.  This
- * should be called before using the encoders and just goes to a default position.
- * Once this has been called once, you can initialize/clear the encoders.
- *
- * @todo Drive the arm to a known position using the potentiometers.
+/* Function: homePos
+ * --------------------------------------
+ * void
+ * returns: nothing
+ * purpose: returns to the home position by calling gotoAngles
  */
 void homePos() {
 	gotoAngles(0, 0);

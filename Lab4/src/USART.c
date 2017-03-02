@@ -12,6 +12,12 @@
 #define UBRR115200 9
 #define UBRR9600 119
 
+/* Function: debugUSARTInit
+ * --------------------------------------
+ * baudrate: defining the baudrate of the USART
+ * returns: nothing
+ * purpose: sets the baudrate and debugs USART
+ */
 void debugUSARTInit(unsigned long baudrate){
 	if (baudrate == 115200) {
 		UBRR1 = UBRR115200;
@@ -26,6 +32,12 @@ void debugUSARTInit(unsigned long baudrate){
 
 }
 
+/* Function: putCharDebug
+ * --------------------------------------
+ * byteToSend: declaring byte that is being sent
+ * returns: nothing
+ * purpose: debuging UCSR1A to observe byte throughput
+ */
 void putCharDebug(char byteToSend){
 	while(UCSR1A & (1<<RXC1)){
 		char jon = UDR1;
@@ -37,6 +49,12 @@ void putCharDebug(char byteToSend){
 
 }
 
+/* Function: getCharDebug
+ * --------------------------------------
+ * void
+ * returns: nothing
+ * purpose: the same as above
+ */
 unsigned char getCharDebug(void) {
 	while(!(UCSR1A & (1<<RXC1))){ // wait for character to be completely received
 

@@ -8,12 +8,11 @@
 #include "button.h"
 #include "RBELib/RBELib.h"
 
+// variables
 int calcError(int setPoint, int actPos);
 int sumPastError(int setPoint, int actPos, char link);
 void updateHistory(int setPoint, int actPos, char link);
-
 int calcDifference(int actPos, char link);
-
 int testSetPoint = 45;
 const int storeSize = 20;
 char currentLink = 'L';
@@ -26,10 +25,17 @@ float historyH[20];
 int value;
 
 
-//struct {float Kp_H; float Ki_H; float Kd_H; float Kp_L; float Ki_L; float Kd_L; } pidConst;
-
+/* Function: setConst
+ * --------------------------------------
+ * link: desired link
+ * Kp: proportional value
+ * Ki: integral value
+ * Kd: derivative value
+ * returns: nothing
+ * purpose: sets the PID constants for the upper and lower links
+ */
 void setConst(char link, float Kp, float Ki, float Kd) {
-	//if setConst is used the way its supposed to be used:
+	// if setConst is used the way its supposed to be used:
 	switch (link) {
 	case 'H':
 		pidConsts.Kp_H = Kp;
@@ -44,11 +50,26 @@ void setConst(char link, float Kp, float Ki, float Kd) {
 	}
 }
 
+/* Function: calcError
+ * --------------------------------------
+ * setPoint: desired point
+ * actPoint: current point
+ * returns: desired minus actual points
+ * purpose: calculating error through difference in points, actual vs desired
+ */
 int calcError(int setPoint, int actPos) {
 	//int armPos = armAngle(getADC(2));
 	return setPoint - actPos;  //figure out what's wrong with this
 }
 
+/* Function: updateHistory
+ * --------------------------------------
+ * setPoint: desired point
+ * actPos: actual position
+ * link: desired link
+ * returns: nothing
+ * purpose: counts history of two links and stores current values to history
+ */
 void updateHistory(int setPoint, int actPos, char link) {
 	float current = calcError(setPoint, actPos);
 	for(int i = 0; i < 20; i++) {
@@ -71,6 +92,14 @@ void updateHistory(int setPoint, int actPos, char link) {
 	}
 }
 
+/* Function: sumPastError
+ * --------------------------------------
+ * setPoint: desired position
+ * actPos: current position
+ * link: desired link
+ * returns: total, of past error
+ * purpose: sums the error to fulfill the I component of the PID controller
+ */
 int sumPastError(int setPoint, int actPos, char link) {
 	updateHistory(setPoint, actPos, link);
 	int total = 0;
@@ -85,8 +114,15 @@ int sumPastError(int setPoint, int actPos, char link) {
 	return total;
 }
 
+/* Function: calcDifference
+ * --------------------------------------
+ * actPos: current position
+ * link: desired link
+ * returns: a comparison between actual position and history
+ * purpose: compares history of either upper or lower arm, to geterate the D
+ * of the PID controller
+ */
 int calcDifference(int actPos, char link) {
-	//int armPos = armAngle(getADC(2));
 	if(link == 'L') {
 		return actPos - historyL[storeSize - 1];
 	}
@@ -95,21 +131,29 @@ int calcDifference(int actPos, char link) {
 	}
 }
 
-
+/* Function: calcPID
+ * --------------------------------------
+ * link: desired link
+ * setPoint: the desired location
+ * actPos: the current position
+ * returns: nothing
+ * purpose: calculates PID for the upper and lower links, providing numbers for the 
+ * PID controller values
+ */
 signed int calcPID(char link, int setPoint, int actPos) {
 	switch (link) {
 	case 'L' :
 		value = (signed int) (
-				67.0*calcError(setPoint, actPos) +
+				40.0*calcError(setPoint, actPos) +
 				4.0*sumPastError(setPoint, actPos, 'L') +
 				1.75*calcDifference(actPos, 'L')
 		);
 		break;
 	case 'H' :
 		value = (signed int)(
-				67.0*calcError(setPoint, actPos) +
-				4.0*sumPastError(setPoint, actPos, 'H') +
-				1.75*calcDifference(actPos, 'H')
+				40.0*calcError(setPoint, actPos) +
+				2.0*sumPastError(setPoint, actPos, 'H') +
+				1.0*calcDifference(actPos, 'H')
 		);
 		break;
 	}
